@@ -101,7 +101,7 @@ public class SetupActivity extends Screen implements Account.Listener, RemoteSes
 
         LinearLayout head = column(this);
         head.setPadding(dp(this, 20), dp(this, 8), dp(this, 20), dp(this, 4));
-        head.addView(title(this, "Settings", 28));
+        head.addView(title(this, getString(R.string.settings_title), 28));
         TextView sub = text(this, "Buddy runs Claude Code, Codex or OpenCode inside the app, on your own subscription "
                 + "(or OpenCode's free models).", 14, MUTED);
         sub.setPadding(0, dp(this, 4), 0, 0);
@@ -166,6 +166,11 @@ public class SetupActivity extends Screen implements Account.Listener, RemoteSes
             Prefs.setThemeMode(this, v);
             themeChanged();
         }), topGap(8));
+        ap.addView(fieldLabel("Language / Idioma", null), topGap(18));
+        ap.addView(segmented(this, new String[][]{{"", "System"}, {"en", "English"}, {"es", "Español"}}, Prefs.language(this), false, v -> {
+            Prefs.setLanguage(this, v);
+            recreate();
+        }), topGap(8));
         ap.addView(fieldLabel("Accent", Theme.hex(Prefs.accent(this))), topGap(18));
         ap.addView(swatches(), topGap(10));
         ap.addView(fieldLabel("Surface", null), topGap(18));
@@ -215,17 +220,14 @@ public class SetupActivity extends Screen implements Account.Listener, RemoteSes
         String token = Prefs.token(this);
         String url = "http://127.0.0.1:" + McpServer.PORT + "/mcp";
         final String cmd = "codex".equals(mcpAgent)
-                // Codex reads the bearer token from an environment variable, so save it in ~/.bashrc too.
                 ? "codex mcp add phone --url " + url + " --bearer-token-env-var BUDDY_TOKEN"
                 + " && echo 'export BUDDY_TOKEN=" + token + "' >> ~/.bashrc && export BUDDY_TOKEN=" + token
                 : "opencode".equals(mcpAgent)
-                // OpenCode reads extra config from OPENCODE_CONFIG_CONTENT; keep it for every shell
                 ? "echo 'export OPENCODE_CONFIG_CONTENT='\\''{\"mcp\":{\"phone\":{\"type\":\"remote\",\"url\":\"" + url
                 + "\",\"oauth\":false,\"timeout\":310000,\"headers\":{\"Authorization\":\"Bearer " + token
                 + "\"}}}}'\\''' >> ~/.bashrc && . ~/.bashrc"
                 : "claude mcp add --transport http -s user phone " + url
                 + " --header \"Authorization: Bearer " + token + "\"";
-        // the token is masked on screen so screenshots never leak it
         mcp.addView(codeBlock(this, cmd.replace(token, token.substring(0, 4) + "••••••••")), topGap(12));
         Button copy = button(this, "Copy command", false);
         copy.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ms_content_copy, 0, 0, 0);
@@ -247,7 +249,6 @@ public class SetupActivity extends Screen implements Account.Listener, RemoteSes
         vc.setPadding(dp(this, 16), dp(this, 14), dp(this, 16), dp(this, 16));
         vc.addView(fieldLabel("Voice input", null));
         String engine = Prefs.voiceEngine(this);
-        // Claude's dictation needs Claude Code signed in, ChatGPT's voice needs Codex: otherwise greyed out
         java.util.Set<String> noVoice = new java.util.HashSet<>();
         if (!SetupState.signedIn(this, "claude")) noVoice.add("claude");
         if (!SetupState.signedIn(this, "codex")) noVoice.add("chatgpt");
@@ -423,12 +424,12 @@ public class SetupActivity extends Screen implements Account.Listener, RemoteSes
                     if (!on) Voice.stopSpeaking();
                 }), full());
         ex.addView(divider(), lineParams());
-        if (!Flavor.PLAY) { // the Play build is updated by Play
+        if (!Flavor.PLAY) {
             ex.addView(switchRow(this, "Update notices", "Buddy checks GitHub once a day and notifies you when a new "
                     + "version is out.", Prefs.updateNotices(this), on -> {
                 Prefs.setUpdateNotices(this, on);
                 if (!on) Updates.cancel(this);
-                else Prefs.setUpdateNotified(this, ""); // notify again about a version muted before
+                else Prefs.setUpdateNotified(this, "");
             }), full());
             ex.addView(divider(), lineParams());
             LinearLayout upd = listRow(this);
@@ -455,7 +456,7 @@ public class SetupActivity extends Screen implements Account.Listener, RemoteSes
         ex.addView(perms, full());
         ex.addView(divider(), lineParams());
         final boolean dev = Prefs.devMode(this);
-        if (!Flavor.PLAY) { // building and installing apps isn't allowed on Play
+        if (!Flavor.PLAY) {
             ex.addView(protect(switchRow(this, "Developer mode", "The bubble's agent may run commands and edit files in "
                     + "~/.buddy/work, so it can build and install apps.", dev, on -> {
                 Prefs.setDevMode(this, on);
@@ -609,7 +610,7 @@ public class SetupActivity extends Screen implements Account.Listener, RemoteSes
                             a2.setOnClickListener(st.l2);
                             LinearLayout.LayoutParams a2p = wrap();
                             if (st.action != null) {
-                                btns.setOrientation(LinearLayout.VERTICAL); // two buttons side by side don't fit
+                                btns.setOrientation(LinearLayout.VERTICAL);
                                 btns.setGravity(Gravity.START);
                                 a2p.topMargin = dp(this, 8);
                             }
@@ -730,7 +731,7 @@ public class SetupActivity extends Screen implements Account.Listener, RemoteSes
         d.show();
     }
 
-    // ---------------------------------------------------------------- helpers
+    // ------------------------------------------------------------- helpers
 
     private LinearLayout card() {
         LinearLayout c = column(this);

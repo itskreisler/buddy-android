@@ -13,6 +13,15 @@ final class Prefs {
         return c.getSharedPreferences("buddy", Context.MODE_PRIVATE);
     }
 
+    /** App language override: "" (system default), "en" (English) or "es" (Español). */
+    static String language(Context c) {
+        return sp(c).getString("app_language", "");
+    }
+
+    static void setLanguage(Context c, String lang) {
+        sp(c).edit().putString("app_language", lang).apply();
+    }
+
     /** Shared secret for the local MCP server; generated once per install. */
     static synchronized String token(Context c) {
         String t = sp(c).getString("token", null);

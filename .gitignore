@@ -5,6 +5,15 @@ dist/
 .gradle/
 .kotlin/
 
+# Flutter output
+flutter_dart/.dart_tool/
+flutter_dart/build/
+flutter_dart/.pub-cache/
+flutter_dart/.pub/
+flutter_dart/ephemeral/
+*.apk
+*.aab
+
 # local machine config
 local.properties
 .idea/

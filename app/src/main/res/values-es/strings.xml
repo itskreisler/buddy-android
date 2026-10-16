@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Buddy</string>
+    <string name="service_label">Asistente Buddy</string>
+    <string name="service_description">Muestra la burbuja de chat de Buddy y permite que Claude Code o Codex, ejecutándose dentro de Buddy en este teléfono, lea la pantalla y toque, escriba y desplace por ti. Nada sale del teléfono excepto lo que el propio agente envía a Anthropic o OpenAI.</string>
+
+    <!-- Navegación y Pestañas -->
+    <string name="tab_chats">Chats</string>
+    <string name="tab_sessions">Sesiones</string>
+    <string name="tab_settings">Ajustes</string>
+
+    <!-- Acciones -->
+    <string name="action_new_chat">Nuevo chat</string>
+    <string name="action_delete">Eliminar</string>
+    <string name="action_approve">Aprobar</string>
+    <string name="action_deny">Denegar</string>
+    <string name="action_change">Cambiar</string>
+    <string name="action_stop">Detener</string>
+    <string name="action_send">Enviar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_update">Actualizar</string>
+    <string name="action_close">Cerrar</string>
+
+    <!-- Ajustes y Configuración -->
+    <string name="settings_title">Ajustes</string>
+    <string name="setup_guide">Guía de configuración</string>
+    <string name="agent_title">Agentes</string>
+    <string name="voice_title">Voz</string>
+    <string name="bubble_title">Burbuja</string>
+    <string name="app_permissions_title">Permisos de aplicaciones</string>
+    <string name="developer_mode_title">Modo desarrollador</string>
+    <string name="remote_control_title">Control remoto</string>
+
+    <!-- Mensajes y Estados -->
+    <string name="status_using_phone">Usando tu teléfono</string>
+    <string name="prompt_type_message">Escribe un mensaje…</string>
+    <string name="no_active_sessions">No hay sesiones activas</string>
+</resources>
