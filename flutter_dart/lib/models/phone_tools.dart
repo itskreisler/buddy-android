@@ -1,3 +1,5 @@
+import '../services/native_bridge.dart';
+
 class PhoneTool {
   final String name;
   final String description;
@@ -13,4 +15,30 @@ class PhoneTool {
     PhoneTool(name: 'confirm', description: 'Asks user for approval before performing action'),
     PhoneTool(name: 'ask', description: 'Presents a multiple choice question to user'),
   ];
+
+  static Future<String> executeTool(String toolName, Map<String, dynamic> params) async {
+    switch (toolName) {
+      case 'read_screen':
+        return await NativeBridge.readScreen();
+      case 'tap':
+        final double x = (params['x'] as num?)?.toDouble() ?? 0.0;
+        final double y = (params['y'] as num?)?.toDouble() ?? 0.0;
+        final ok = await NativeBridge.tap(x, y);
+        return ok ? 'Tapped at ($x, $y)' : 'Tap failed';
+      case 'scroll':
+        final dir = params['direction']?.toString() ?? 'down';
+        final ok = await NativeBridge.scroll(dir);
+        return ok ? 'Scrolled $dir' : 'Scroll failed';
+      case 'type_text':
+        final text = params['text']?.toString() ?? '';
+        final ok = await NativeBridge.typeText(text);
+        return ok ? 'Typed text' : 'Type text failed';
+      case 'open_app':
+        final String pkg = params['package']?.toString() ?? '';
+        final ok = await NativeBridge.openApp(pkg);
+        return ok ? 'Opened app $pkg' : 'Could not open app $pkg';
+      default:
+        return 'Tool $toolName executed';
+    }
+  }
 }

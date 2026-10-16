@@ -40,6 +40,24 @@ class MainActivity : FlutterActivity() {
                         result.error("UNAVAILABLE", "Accessibility Service not running", null)
                     }
                 }
+                "scroll" -> {
+                    val service = BuddyService.instance
+                    val dir = call.argument<String>("direction") ?: "down"
+                    if (service != null) {
+                        result.success(service.scroll(dir))
+                    } else {
+                        result.error("UNAVAILABLE", "Accessibility Service not running", null)
+                    }
+                }
+                "typeText" -> {
+                    val service = BuddyService.instance
+                    val text = call.argument<String>("text") ?: ""
+                    if (service != null) {
+                        result.success(service.typeText(text))
+                    } else {
+                        result.error("UNAVAILABLE", "Accessibility Service not running", null)
+                    }
+                }
                 "openApp" -> {
                     val service = BuddyService.instance
                     val pkg = call.argument<String>("package") ?: ""

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/app_state.dart';
 import '../models/chat.dart';
 import '../models/agent_models.dart';
+import '../models/phone_tools.dart';
 import '../l10n/app_localizations.dart';
 
 class ChatDetailScreen extends StatefulWidget {
@@ -237,7 +238,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     _sendMessage(text, chat.id);
   }
 
-  void _sendMessage(String text, String chatId) {
+  void _sendMessage(String text, String chatId) async {
     widget.appState.addMessage(
       chatId,
       Message(
@@ -247,14 +248,35 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       ),
     );
 
-    // Simulate Agent response
+    final lower = text.toLowerCase();
+    String toolOutput = '';
+
+    if (lower.contains('screen') || lower.contains('read')) {
+      toolOutput = await PhoneTool.executeTool('read_screen', {});
+    } else if (lower.contains('open')) {
+      toolOutput = await PhoneTool.executeTool('open_app', {'package': 'com.whatsapp'});
+    }
+
+    if (toolOutput.isNotEmpty) {
+      widget.appState.addMessage(
+        chatId,
+        Message(
+          id: 'msg-tool-${DateTime.now().millisecondsSinceEpoch}',
+          kind: MessageKind.toolCall,
+          text: toolOutput,
+        ),
+      );
+    }
+
     Future.delayed(const Duration(milliseconds: 600), () {
       widget.appState.addMessage(
         chatId,
         Message(
           id: 'msg-resp-${DateTime.now().millisecondsSinceEpoch}',
           kind: MessageKind.assistant,
-          text: 'I received your request: "$text". Operating task completed.',
+          text: toolOutput.isNotEmpty
+              ? 'Executed screen interaction via system accessibility service: $toolOutput'
+              : 'I received your request: "$text". Operating task completed.',
         ),
       );
     });

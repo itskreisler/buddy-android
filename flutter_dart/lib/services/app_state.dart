@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import '../models/chat.dart';
 import '../models/session.dart';
 
@@ -11,6 +11,8 @@ class AppState extends ChangeNotifier {
   bool _bubbleEnabled = true;
   String _voiceEngine = 'phone'; // 'phone', 'claude', 'chatgpt'
   String _themeMode = 'system'; // 'system', 'light', 'dark'
+  Locale? _locale; // null = system default, Locale('en'), Locale('es')
+
   final String _agentClaudeStatus = 'Signed in';
   final String _agentCodexStatus = 'Not signed in';
   final String _agentOpenCodeStatus = 'Ready (Free)';
@@ -23,6 +25,8 @@ class AppState extends ChangeNotifier {
   bool get bubbleEnabled => _bubbleEnabled;
   String get voiceEngine => _voiceEngine;
   String get themeMode => _themeMode;
+  Locale? get locale => _locale;
+
   String get agentClaudeStatus => _agentClaudeStatus;
   String get agentCodexStatus => _agentCodexStatus;
   String get agentOpenCodeStatus => _agentOpenCodeStatus;
@@ -140,6 +144,11 @@ class AppState extends ChangeNotifier {
 
   void setThemeMode(String mode) {
     _themeMode = mode;
+    notifyListeners();
+  }
+
+  void setLocale(Locale? loc) {
+    _locale = loc;
     notifyListeners();
   }
 }

@@ -46,6 +46,7 @@ class _BuddyAppState extends State<BuddyApp> {
     return MaterialApp(
       title: 'Buddy',
       debugShowCheckedModeBanner: false,
+      locale: _appState.locale,
       theme: ThemeData(
         useMaterial3: true,
         colorSchemeSeed: Colors.deepOrange,

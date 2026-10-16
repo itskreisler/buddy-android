@@ -34,6 +34,26 @@ class NativeBridge {
     }
   }
 
+  /// Scrolls up or down via AccessibilityNodeInfo ACTION_SCROLL.
+  static Future<bool> scroll(String direction) async {
+    try {
+      final bool success = await _channel.invokeMethod('scroll', {'direction': direction});
+      return success;
+    } on PlatformException catch (_) {
+      return false;
+    }
+  }
+
+  /// Types text into currently focused input node via ACTION_SET_TEXT.
+  static Future<bool> typeText(String text) async {
+    try {
+      final bool success = await _channel.invokeMethod('typeText', {'text': text});
+      return success;
+    } on PlatformException catch (_) {
+      return false;
+    }
+  }
+
   /// Opens application by package name.
   static Future<bool> openApp(String packageName) async {
     try {

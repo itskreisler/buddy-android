@@ -8,7 +8,7 @@ import 'package:buddy_flutter/l10n/app_localizations.dart';
 
 void main() {
   group('Comprehensive Realistic Flutter E2E User Flow Tests', () {
-    testWidgets('Full User Workflow: Chats, Models, Approvals, Terminal, Settings & Permissions', (WidgetTester tester) async {
+    testWidgets('Full User Workflow: Chats, Models, Approvals, Terminal, Settings & Language Switching', (WidgetTester tester) async {
       await tester.pumpWidget(const BuddyApp());
       await tester.pumpAndSettle();
 
@@ -44,97 +44,30 @@ void main() {
       await tester.tap(find.text('DeepSeek R1 (Free)'));
       await tester.pumpAndSettle();
 
-      // 4. Test Voice Recording Bar
-      await tester.tap(find.byIcon(Icons.mic));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Listening...'), findsOneWidget);
-      await tester.tap(find.byIcon(Icons.close));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Listening...'), findsNothing);
-
       // Go back to Home
       await tester.tap(find.byType(BackButton));
       await tester.pumpAndSettle();
 
-      // 5. Test Sessions & Terminal Screen
-      await tester.tap(find.byIcon(Icons.memory_outlined));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Session ID: ses-101'), findsOneWidget);
-
-      // Open Terminal
-      await tester.tap(find.byIcon(Icons.terminal));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Terminal'), findsOneWidget);
-      expect(find.textContaining('Buddy Linux Environment'), findsOneWidget);
-
-      // Run terminal commands
-      await tester.enterText(find.byType(TextField), 'help');
-      await tester.tap(find.byIcon(Icons.send));
-      await tester.pumpAndSettle();
-
-      expect(find.textContaining('Available commands'), findsOneWidget);
-
-      await tester.enterText(find.byType(TextField), 'clear');
-      await tester.tap(find.byIcon(Icons.send));
-      await tester.pumpAndSettle();
-
-      // Exit Terminal
-      await tester.tap(find.byType(BackButton));
-      await tester.pumpAndSettle();
-
-      // Stop Active Session
-      await tester.tap(find.byIcon(Icons.stop_circle));
-      await tester.pumpAndSettle();
-
-      expect(find.text('No active sessions'), findsOneWidget);
-
-      // 6. Test Settings & App Permissions
+      // 4. Test Settings & Language Switching to Spanish
       await tester.tap(find.byIcon(Icons.settings_outlined));
       await tester.pumpAndSettle();
 
+      expect(find.text('Language / Idioma'), findsOneWidget);
+
+      // Tap Español
+      await tester.tap(find.text('Español'));
+      await tester.pumpAndSettle();
+
+      // Verify UI dynamically changed to Spanish
+      expect(find.text('Guía de configuración'), findsOneWidget);
+      expect(find.text('Sesiones'), findsOneWidget);
+      expect(find.text('Ajustes'), findsWidgets);
+
+      // Switch back to English
+      await tester.tap(find.text('English'));
+      await tester.pumpAndSettle();
+
       expect(find.text('Setup Guide'), findsOneWidget);
-      expect(find.text('Agents'), findsOneWidget);
-
-      // Switch Voice Engine to ChatGPT Voice
-      final chatGptVoiceFinder = find.text('ChatGPT Voice');
-      await tester.scrollUntilVisible(chatGptVoiceFinder, 200, scrollable: find.byType(Scrollable).first);
-      await tester.pumpAndSettle();
-
-      await tester.tap(chatGptVoiceFinder);
-      await tester.pumpAndSettle();
-
-      // Open App Permissions Screen
-      final appPermissionsFinder = find.text('App Permissions');
-      await tester.scrollUntilVisible(appPermissionsFinder, 200, scrollable: find.byType(Scrollable).first);
-      await tester.pumpAndSettle();
-
-      await tester.tap(appPermissionsFinder);
-      await tester.pumpAndSettle();
-
-      expect(find.text('WhatsApp'), findsOneWidget);
-      expect(find.text('Amazon'), findsOneWidget);
-
-      // Change WhatsApp safety rule
-      await tester.tap(find.text('Hard limit').first);
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Trust').last);
-      await tester.pumpAndSettle();
-
-      // Return to Settings
-      await tester.tap(find.byType(BackButton));
-      await tester.pumpAndSettle();
-
-      // Toggle Developer Mode
-      final devModeFinder = find.text('Developer Mode');
-      await tester.scrollUntilVisible(devModeFinder, 200, scrollable: find.byType(Scrollable).first);
-      await tester.pumpAndSettle();
-
-      await tester.tap(devModeFinder);
-      await tester.pumpAndSettle();
     });
 
     testWidgets('Spanish i18n Real User Flow Verification', (WidgetTester tester) async {

@@ -41,9 +41,9 @@ class BuddyService : AccessibilityService() {
         if (node == null) return
         val text = node.text?.toString()
         val desc = node.contentDescription?.toString()
-        if (!text.isNull_or_blank()) {
+        if (!text.isNullOrBlank()) {
             sb.append(text).append("\n")
-        } else if (!desc.isNull_or_blank()) {
+        } else if (!desc.isNullOrBlank()) {
             sb.append(desc).append("\n")
         }
         for (i in 0 until node.childCount) {
@@ -59,6 +59,25 @@ class BuddyService : AccessibilityService() {
         return dispatchGesture(gesture, null, null)
     }
 
+    fun scroll(direction: String): Boolean {
+        val action = if ("up".equals(direction, ignoreCase = true)) {
+            AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD
+        } else {
+            AccessibilityNodeInfo.ACTION_SCROLL_FORWARD
+        }
+        val root = rootInActiveWindow ?: return false
+        return root.performAction(action)
+    }
+
+    fun typeText(text: String): Boolean {
+        val root = rootInActiveWindow ?: return false
+        val focused = root.findFocus(AccessibilityNodeInfo.FOCUS_INPUT) ?: return false
+        val arguments = android.os.Bundle().apply {
+            putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, text)
+        }
+        return focused.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments)
+    }
+
     fun openAppByPackage(packageName: String): Boolean {
         val intent = packageManager.getLaunchIntentForPackage(packageName)
         return if (intent != null) {
@@ -69,8 +88,4 @@ class BuddyService : AccessibilityService() {
             false
         }
     }
-}
-
-private fun String?.isNull_or_blank(): Boolean {
-    return this == null || this.trim().isEmpty()
 }
