@@ -13,25 +13,31 @@ public class BuddyNativeE2ETest {
     }
 
     @Test
-    public void testAgentModelsAvailability() {
-        String[][] models = Models.forBackend("claude");
-        assertNotNull(models);
-        assertTrue(models.length > 0);
+    public void testAgentModelsAndEffortLevels() {
+        // Claude models and effort levels
+        String[][] claudeModels = Models.forBackend("claude");
+        assertNotNull(claudeModels);
+        assertTrue(claudeModels.length >= 3);
+        String[][] claudeEfforts = Models.efforts("claude");
+        assertNotNull(claudeEfforts);
+        assertTrue(claudeEfforts.length > 0);
 
+        // Codex models and effort levels
         String[][] codexModels = Models.forBackend("codex");
         assertNotNull(codexModels);
-        assertTrue(codexModels.length > 0);
+        assertTrue(codexModels.length >= 2);
+        String[][] codexEfforts = Models.efforts("codex");
+        assertNotNull(codexEfforts);
 
+        // OpenCode models
         String[][] opencodeModels = Models.forBackend("opencode");
         assertNotNull(opencodeModels);
-        assertTrue(opencodeModels.length > 0);
+        assertTrue(opencodeModels.length >= 1);
     }
 
     @Test
-    public void testEndToEndFlowSimulation() {
-        // Verify native assistant state initializers and configuration integrity
-        assertNotNull("app.buddy.assistant.BuddyService");
-        assertNotNull("app.buddy.assistant.MainActivity");
-        assertNotNull("app.buddy.assistant.McpServer");
+    public void testGuardNormalization() {
+        assertEquals("añadir al carrito", Guard.norm("  Añadir  al  carrito  "));
+        assertEquals("whatsapp", Guard.norm("WhatsApp"));
     }
 }
