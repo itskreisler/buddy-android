@@ -3,4 +3,36 @@
     <string name="app_name">Buddy</string>
     <string name="service_label">Buddy assistant</string>
     <string name="service_description">Shows the Buddy chat bubble and lets Claude Code or Codex, running inside Buddy on this phone, read the screen and tap, type and scroll for you. Nothing leaves the phone except what the agent itself sends to Anthropic or OpenAI.</string>
+
+    <!-- Navigation and Tabs -->
+    <string name="tab_chats">Chats</string>
+    <string name="tab_sessions">Sessions</string>
+    <string name="tab_settings">Settings</string>
+
+    <!-- Actions -->
+    <string name="action_new_chat">New chat</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_approve">Approve</string>
+    <string name="action_deny">Deny</string>
+    <string name="action_change">Change</string>
+    <string name="action_stop">Stop</string>
+    <string name="action_send">Send</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_update">Update</string>
+    <string name="action_close">Close</string>
+
+    <!-- Settings & Setup -->
+    <string name="settings_title">Settings</string>
+    <string name="setup_guide">Setup Guide</string>
+    <string name="agent_title">Agents</string>
+    <string name="voice_title">Voice</string>
+    <string name="bubble_title">Bubble</string>
+    <string name="app_permissions_title">App Permissions</string>
+    <string name="developer_mode_title">Developer Mode</string>
+    <string name="remote_control_title">Remote Control</string>
+
+    <!-- Prompts and Statuses -->
+    <string name="status_using_phone">Using your phone</string>
+    <string name="prompt_type_message">Type a message…</string>
+    <string name="no_active_sessions">No active sessions</string>
 </resources>

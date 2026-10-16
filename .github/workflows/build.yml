@@ -21,6 +21,10 @@ jobs:
           distribution: temurin
           java-version: "21"
 
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
       - uses: gradle/actions/setup-gradle@v6
 
       # Release signing is optional: add the BUDDY_KEYSTORE_BASE64 and BUDDY_KEYSTORE_PASSWORD
@@ -36,7 +40,14 @@ jobs:
       - name: Build release APK (GitHub) and bundle (Google Play)
         env:
           BUDDY_KEYSTORE_PASSWORD: ${{ secrets.BUDDY_KEYSTORE_PASSWORD }}
-        run: ./gradlew --no-daemon assembleGithubRelease bundlePlayRelease
+        run: ./gradlew --no-daemon assembleGithubRelease bundlePlayRelease test
+
+      - name: Build Flutter App
+        run: |
+          cd flutter_dart
+          flutter pub get
+          flutter test
+          flutter build apk --release
 
       - name: Collect APK
         run: |
@@ -45,6 +56,12 @@ jobs:
           cp "$apk" "dist/buddy-${GITHUB_REF_NAME//\//-}.apk"
           # fixed name too, so releases/latest/download/buddy.apk always gets the newest version
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then cp "$apk" dist/buddy.apk; fi
+
+          # Collect Flutter APK
+          flutter_apk=$(find flutter_dart/build/app/outputs/flutter-apk -name 'app-release.apk' | head -1)
+          if [ -f "$flutter_apk" ]; then
+            cp "$flutter_apk" "dist/buddy-flutter-${GITHUB_REF_NAME//\//-}.apk"
+          fi
           ls -l dist
 
       - uses: actions/upload-artifact@v7
